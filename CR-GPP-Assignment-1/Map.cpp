@@ -47,15 +47,15 @@ void Map::drawMap() {
 
 // Return true if the marker at the specified index is an object marker
 bool Map::isTileOccupied(int x, int y) {
-	return vTileContents[y][x] != '*';
+	return vTileContents[y-1][x-1] != '*';
 }
 
 // Return the tile marker stored in a specific index
 char Map::getTileMarker(int x, int y) {
-	return vTileContents[y][x];
+	return vTileContents[y-1][x-1];
 }
 
 // Set the tile marker at a specific index
 void Map::setTileMarker(int x, int y, char marker) {
-	vTileContents[y][x] = marker;
+	vTileContents[y-1][x-1] = marker;
 }

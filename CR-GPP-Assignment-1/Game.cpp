@@ -176,9 +176,9 @@ void Game::updateMap() {
 			cout << "Adding object marker to map to position (" << character->getXPosition() << ", " << character->getYPosition() << ")" << endl;
 			// Check which type of character object it is and mark the map accordingly, Player = 'P', Enemy = 'E'
 			if (character->getTypeID() == "Enemy") {
-				map.setTileMarker(character->getXPosition(), character->getYPosition(), 'P');
-			} else if (character->getTypeID() == "Player") {
 				map.setTileMarker(character->getXPosition(), character->getYPosition(), 'E');
+			} else if (character->getTypeID() == "Player") {
+				map.setTileMarker(character->getXPosition(), character->getYPosition(), 'P');
 			}
 		}
 	}
