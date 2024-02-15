@@ -1,11 +1,13 @@
 #include "GameCharacter.h"
 
 // Function to create an object
-void GameCharacter::spawn(string typeID, int health, int speed, int x, int y) {
+void GameCharacter::spawn(string typeID, int health, int speed, int x, int y, int attack, int defense) {
 	// Initialize variables
 	m_typeID = typeID;
 	m_health = health;
 	m_speed = speed;
+	m_attack = attack;
+	m_defense = defense;
 	m_x = x;
 	m_y = y;
 }
@@ -39,27 +41,57 @@ bool GameCharacter::hitPerimeter() {
 	}
 }
 
-// Return the characters X coordinate
+// Returna the characters X coordinate
 int GameCharacter::getXPosition() {
 	return m_x;
 }
 
-// Return the characters Y coordinate
+// Returns the characters Y coordinate
 int GameCharacter::getYPosition() {
 	return m_y;
 }
 
-// Return a characters typeID
+// Returns a characters typeID
 string GameCharacter::getTypeID() {
 	return m_typeID;
 }
 
-// Return a characters health value
+// Returns a characters health value
 int GameCharacter::getHealth() {
 	return m_health;
 }
 
-// Set a characters health value
+// Sets a characters health value
 void GameCharacter::setHealth(int health) {
 	m_health = health;
+}
+
+// Returns a characters speed value
+int GameCharacter::getSpeed() {
+	return m_speed;
+}
+
+// Sets a characters speed value
+void GameCharacter::setSpeed(int speed) {
+	m_speed = speed;
+}
+
+// Returns a characters attack value
+int GameCharacter::getAttack() {
+	return m_attack;
+}
+
+// Sets a characters attack value
+void GameCharacter::setAttack(int attack) {
+	m_attack = attack;
+}
+
+// Returns a characters defense value
+int GameCharacter::getDefense() {
+	return m_defense;
+}
+
+// Sets a characters defense value
+void GameCharacter::setDefense(int defense) {
+	m_defense = defense;
 }

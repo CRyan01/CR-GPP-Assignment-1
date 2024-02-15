@@ -1,5 +1,9 @@
 #include "Game.h"
 
+Game::Game(int numOfEnemies) {
+	m_numOfEnemies = numOfEnemies;
+}
+
 // Function to initialize the game
 void Game::init() {
 	// Initialize a vector used to store pointers to enemy objects
@@ -39,14 +43,14 @@ void Game::init() {
 	// Create a player object and assign its address to pPlayer
 	pPlayer = new Player;
 	// Call spawn() on the player object pPlayer points to set its properties
-	pPlayer->spawn("Player", (rand() % 170) + 140, (rand() % 4) + 2, randomXCoordinates[vpEnemies.size()], randomYCoordinates[vpEnemies.size()]);
+	pPlayer->spawn("Player", (rand() % 170) + 140, (rand() % 4) + 2, randomXCoordinates[vpEnemies.size()], randomYCoordinates[vpEnemies.size()], 20, 5);
 	// Print debug info
 	cout << "Debug: Finished creation and initialization of a player object" << endl;
 
 	// Create four enemy objects and assign their addresses to the vector of enemy pointers
 	for (int i = 0; i < vpEnemies.size(); ++i) {
 		vpEnemies[i] = new Enemy;
-		vpEnemies[i]->spawn("Enemy", (rand() % 150) + 90, (rand() % 4) + 2, randomXCoordinates[i], randomYCoordinates[i]);
+		vpEnemies[i]->spawn("Enemy", (rand() % 150) + 90, (rand() % 4) + 2, randomXCoordinates[i], randomYCoordinates[i], 20, 5);
 	}
 	// Print debug info
 	cout << "Debug: Finished creation and initialization of " << vpEnemies.size() << " enemy objects" << endl;
@@ -64,6 +68,10 @@ void Game::init() {
 		lpGameCharacters.push_back(vpEnemies[i]);
 		cout << "Debug: A pointer to an enemy object was added to the list of character pointers" << endl;
 	}
+
+	// Initialize the time of day settings to start in the morning
+	setTime(0);
+	setIsNight(0);
 }
 
 // Function display every characters typeID, X coord and Y coord
@@ -82,6 +90,9 @@ void Game::update() {
 	for (GameCharacter* character : lpGameCharacters) {
 		character->update(); // Call update() on the object character points to
 	}
+
+	updateMap(); // Update the map with the new game state
+	updateTime(); // Update ingame time
 }
 
 // Function to detect, initiate and resolve battles
@@ -103,28 +114,37 @@ void Game::battle() {
 			if ((firstCharacter->getXPosition() == secondCharacter->getXPosition()) && (firstCharacter->getYPosition() == secondCharacter->getYPosition())) {
 				// Print context
 				cout << "Battle initiated at: (" << firstCharacter->getXPosition() << ", " << firstCharacter->getYPosition()<< ") Participants: (" << firstCharacter->getTypeID() << " Vs " << secondCharacter->getTypeID() << ")" << endl;
-
-				// Compare the health values of the character objects pointed to by 'firstCharacter' and 'secondCharacter'
-				// to determine the outcome of the battle
-				if (firstCharacter->getHealth() > secondCharacter->getHealth()) {
-					// If the first character beats the second character
-					// Print context
-					cout << "Battle Result: " << firstCharacter->getTypeID() << " has won the battle Vs " << secondCharacter->getTypeID() << " at (" << firstCharacter->getXPosition() << ", " << firstCharacter->getYPosition() << ")" << endl << secondCharacter->getTypeID() << " is dead " << endl;
-					// Set the health value of the character object pointed to by secondCharacter to zero
-					secondCharacter->setHealth(0);
-				} else if (firstCharacter->getHealth() < secondCharacter->getHealth()) {
-					// If the first character loses to the second character
-					// Print context
-					cout << "Battle Result: " << secondCharacter->getTypeID() << " has won the battle Vs " << firstCharacter->getTypeID() << " at (" << secondCharacter->getXPosition() << ", " << secondCharacter->getYPosition() << ")" << endl << firstCharacter->getTypeID() << " is dead " << endl;
-					// Set the health value of the character object pointed to by firstCharacter to zero
-					firstCharacter->setHealth(0);
-				} else {
-					// If both characters have equal health
-					// Print context
-					cout << "Battle Result:  The battle between" << firstCharacter->getTypeID() << " and " << secondCharacter->getTypeID() << " at (" << firstCharacter->getXPosition() << ", " << firstCharacter->getYPosition() << ") has resulted in a draw" << endl;
-				}
+				simulateBattle(firstCharacter, secondCharacter); // Call simulatebattle() to simulate the battle
 			}
 		}
+	}
+}
+
+// A function to simulate a battle between two characters
+void Game::simulateBattle(GameCharacter* characterOne, GameCharacter* characterTwo) {
+	// Determine who attacks first based on speed
+	if (characterOne->getSpeed() < characterTwo->getSpeed()) {
+		swap(characterOne, characterTwo); // Swap the characters if the second character is faster
+		cout << characterOne->getTypeID() << " closed the gap faster and will land strike first" << endl;
+	} else {
+		cout << characterOne->getTypeID() << " closed the gap faster and will land strike first" << endl;
+	}
+
+	// Simulate the battle while both characters are alive
+	while (characterOne->isAlive() && characterTwo->isAlive()) {
+		// Calculate the how much damage the second character recieves
+		int damageTaken = characterOne->getAttack() - characterTwo->getDefense();
+
+		// Reduce the second characters health
+		characterTwo->setHealth(characterTwo->getHealth() - damageTaken);
+
+		// Print Context
+		cout << characterOne->getTypeID() << " hit " << characterTwo->getTypeID() << " for " << damageTaken << " damage" << endl;
+
+		if (!characterTwo->isAlive()) {
+			cout << characterTwo->getTypeID() << " was defeated by " << characterOne->getTypeID() << endl;
+		}
+		swap(characterOne, characterTwo); // Swap the characters in preparation for the next turn
 	}
 }
 
@@ -159,12 +179,7 @@ void Game::clean() {
 	}
 }
 
-// Function to print the map to console
-void Game::printMapToConsole() {
-	map.drawMap(); // Call drawMap() to print the map
-}
-
-// Function to update the map with the positions of each character
+// Function to update the map with the positions of each character then print to console
 void Game::updateMap() {
 	map.resetMap(); // Call reset map to clear the map of old markers
 
@@ -173,7 +188,7 @@ void Game::updateMap() {
 		// Check if the character is alive
 		if (character->isAlive()) {
 			// Print debug
-			cout << "Adding object marker to map to position (" << character->getXPosition() << ", " << character->getYPosition() << ")" << endl;
+			cout << "Adding " << character->getTypeID() << " object marker to map to position(" << character->getXPosition() << ", " << character->getYPosition() << ")" << endl;
 			// Check which type of character object it is and mark the map accordingly, Player = 'P', Enemy = 'E'
 			if (character->getTypeID() == "Enemy") {
 				map.setTileMarker(character->getXPosition(), character->getYPosition(), 'E');
@@ -182,4 +197,58 @@ void Game::updateMap() {
 			}
 		}
 	}
+	// Call draw map to output the updated map to the console
+	map.drawMap(isNight(), pPlayer->getXPosition(), pPlayer->getYPosition()); 
+}
+
+// A function to track the number of turns taken and change time of day every five turns
+void Game::updateTime() {
+	setTime(getTime() + 1); // Increment the time counter
+
+	// Check if the time counter has reached five
+	if (getTime() == 5) {
+		setTime(0); // Reset the time counter
+		setIsNight(!isNight()); // Toogle the boolean to change time of day
+		if (isNight()) {
+			cout << "The sky grows darker, its getting harder to see" << endl;
+		} else {
+			cout << "The sun rises, you can see clearly now" << endl;
+		}
+	}
+}
+
+// A function to check if victory or defeat conditions have been met
+bool Game::isGameOver() {
+	if (!pPlayer->isAlive()) { // Check if the player is dead
+		cout << "Defeat" << endl;
+		return true; // Return true if the player is dead
+	} else {
+		for (Enemy* enemy : vpEnemies) { // Check if there are any enemies alive
+			if (enemy->isAlive()) {
+				return false; // Return false if there is an enemy still alive
+			}
+		}
+		cout << "Victory" << endl;
+		return true; // If none of the enemies are alive return true
+	}
+}
+
+// Returns the time counter value
+int Game::getTime() {
+	return m_Time;
+}
+
+// Returns true if it is night ingame
+bool Game::isNight() {
+	return m_isNight;
+}
+
+// Sets the time counter value
+void Game::setTime(int time) {
+	m_Time = time;
+}
+
+// Sets the day or night flag to a specific value
+void Game::setIsNight(bool value) {
+	m_isNight = value;
 }

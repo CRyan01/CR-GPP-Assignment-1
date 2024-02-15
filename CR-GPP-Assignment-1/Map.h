@@ -18,7 +18,7 @@ public:
 	void resetMap();
 
 	// Print the map
-	void drawMap();
+	void drawMap(bool isNight, int x, int y);
 
 	// Return true if the marker at the specified index is an object marker
 	bool isTileOccupied(int x, int y);

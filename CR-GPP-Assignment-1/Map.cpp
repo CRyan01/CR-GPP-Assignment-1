@@ -31,14 +31,24 @@ void Map::resetMap() {
 }
 
 // Print the map
-void Map::drawMap() {
+void Map::drawMap(bool isNight, int playerX, int playerY) {
 	cout << endl; // Move to the next line
 
 	// Nested loops which iterate through each row and column of the 2D vector
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
-			// Print the tile marker at the specified index
-			cout << " " << vTileContents[y][x];
+			// Utilize manhattan distance formula to determine the distance between two vectors
+			int distanceFromPlayer = abs(x + 1 - playerX) + abs(y + 1 - playerY);
+
+			// Check if it is night, if it is check how far the marker is from the player,
+			// if the marker is beyond 5 tiles away hide it
+			if ((isNight) && (distanceFromPlayer > 5)) {
+				// Print the tile marker at the specified index
+				cout << " " << '*';
+			} else {
+				// Print the tile marker at the specified index
+				cout << " " << vTileContents[y][x];
+			}
 		}
 		cout << endl; // Move to the next line
 	}
