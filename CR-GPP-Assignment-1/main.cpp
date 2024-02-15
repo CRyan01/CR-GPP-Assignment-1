@@ -16,7 +16,7 @@ int main() {
 		// Ask how many enemies the player wants to fight
 		do {
 			// Prompt for input
-			cout << "How many enemies would you like to play against: Max(9) - Min(1)" <<endl;
+			cout << "How many enemies would you like to play against: Max 9 - Min 1" <<endl;
 
 			// Get & store user input
 			int userInput = 0;
@@ -33,7 +33,7 @@ int main() {
 
 		inputValid = false; // Reset the flag for the next menu
 
-		Game game(numEnemies); // Create the game object
+		Game game(numEnemies); // Create the game object with the specified number of enemies
 		game.init(); // Initialize the game
 		
 		const int maxTurns = 100;

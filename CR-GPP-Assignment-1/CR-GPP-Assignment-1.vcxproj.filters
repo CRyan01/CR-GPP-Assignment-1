@@ -42,7 +42,10 @@
     <ClInclude Include="SpeedItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StaminaItem.h">
+    <ClInclude Include="AttackItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefenseItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +77,10 @@
     <ClCompile Include="SpeedItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StaminaItem.cpp">
+    <ClCompile Include="AttackItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefenseItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Map.h"
+#include "Item.h"
 
 
 class Game {
@@ -12,6 +13,7 @@ private:
 	Player* pPlayer; // A pointer to a player object
 	vector<Enemy*> vpEnemies; // A vector containing pointers to enemy objects
 	list<GameCharacter*> lpGameCharacters; // A list containing GameCharacter objects
+	vector<Item*> items;
 	Map map; // A map object which represents the game state
 	int m_Time; // Counter variable to control when it should be day or night
 	bool m_isNight; // Bool to indicate if it is day or night

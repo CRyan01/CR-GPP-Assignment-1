@@ -43,14 +43,14 @@ void Game::init() {
 	// Create a player object and assign its address to pPlayer
 	pPlayer = new Player;
 	// Call spawn() on the player object pPlayer points to set its properties
-	pPlayer->spawn("Player", (rand() % 170) + 140, (rand() % 4) + 2, randomXCoordinates[vpEnemies.size()], randomYCoordinates[vpEnemies.size()], 20, 5);
+	pPlayer->spawn("Player", (rand() % 170) + 140, (rand() % 4) + 2, randomXCoordinates[vpEnemies.size()], randomYCoordinates[vpEnemies.size()], (rand() % 31) + 20, (rand() % 20) + 10);
 	// Print debug info
 	cout << "Debug: Finished creation and initialization of a player object" << endl;
 
 	// Create four enemy objects and assign their addresses to the vector of enemy pointers
 	for (int i = 0; i < vpEnemies.size(); ++i) {
 		vpEnemies[i] = new Enemy;
-		vpEnemies[i]->spawn("Enemy", (rand() % 150) + 90, (rand() % 4) + 2, randomXCoordinates[i], randomYCoordinates[i], 20, 5);
+		vpEnemies[i]->spawn("Enemy", (rand() % 150) + 90, (rand() % 4) + 2, randomXCoordinates[i], randomYCoordinates[i], (rand() % 30) + 20, (rand() % 20) + 10);
 	}
 	// Print debug info
 	cout << "Debug: Finished creation and initialization of " << vpEnemies.size() << " enemy objects" << endl;
