@@ -73,4 +73,8 @@ void Player::update() {
 			break;
 		}
 	} while (!inputValid); // Loop until the input is valid
+
+	if (m_health < 170) {
+		m_health += 20; // Placeholder until items are implemented
+	}
 }
